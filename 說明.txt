@@ -1,0 +1,26 @@
+#將ui檔案轉換成py檔
+pyuic6 -x qt_test.ui -o qt_test.py
+#將code打包成執行檔
+pyinstaller --onefile main.py --hidden-import secrets
+
+#為了將mssql套件打包進去
+pyi-makespec main.py(主要的py檔，有import其他py檔)
+會產生main.spec，修改其中內容 hiddenimports = []，將所需內容加入
+如下:
+a = Analysis(
+    ['main.py'],
+    pathex=[],
+    binaries=[],
+    datas=[],
+    hiddenimports=['pymssql', 'sqlalchemy', 'sqlalchemy.sql.default_comparator'],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
+    noarchive=False,
+)
+
+#修改完，指令 pyinstaller main.spec
